@@ -2,11 +2,22 @@
 /*
 Plugin Name: MSD Site Settings
 Description: Provides settings panel for several social/address options and widgets/shortcodes/functions for display.
-Version: 0.3
+Version: 0.4
 Author: Catherine M OBrien Sandrick (CMOS)
 Author URI: http://msdlab.com/biological-assets/catherine-obrien-sandrick/
+GitHub Plugin URI: https://github.com/msdlab/msd_site_settings
+GitHub Branch:     master
 License: GPL v2
 */
+
+if(!class_exists('GitHubPluginUpdater')){
+    require_once (plugin_dir_path(__FILE__).'/lib/resource/GitHubPluginUpdater.php');
+}
+
+if ( is_admin() ) {
+    new GitHubPluginUpdater( __FILE__, 'msd_lab', "msd_site_settings" );
+}
+
 
 class MSDSocial{
 	private $the_path;
