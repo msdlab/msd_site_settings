@@ -162,8 +162,9 @@ $states = array('ALABAMA'=>"AL",
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
       <li class="active"><a href="#social-media" data-toggle="tab">Social Media</a></li>
-      <li><a href="#location" data-toggle="tab">Locations</a></li>
-      <li><a href="#contact" data-toggle="tab">Contact</a></li>
+      <li><a href="#primary" data-toggle="tab">Primary Location</a></li>
+      <li><a href="#locations" data-toggle="tab">Additional Locations</a></li>
+      <li><a href="#mailing" data-toggle="tab">Mailing</a></li>
       <li><a href="#hours" data-toggle="tab">Business Hours</a></li>
       <li><a href="#settings" data-toggle="tab">Plugin Settings</a></li>
     </ul>
@@ -173,11 +174,14 @@ $states = array('ALABAMA'=>"AL",
       <div class="tab-pane active" id="social-media">
            <?php include_once('settings-social-media.php'); ?>
       </div>
-      <div class="tab-pane" id="location">
-           <?php include_once('settings-locations.php'); ?>
+      <div class="tab-pane" id="primary">
+           <?php include_once('settings-primary-location.php'); ?>
       </div>
-      <div class="tab-pane" id="contact">
-           <?php include_once('settings-contact.php'); ?>
+      <div class="tab-pane" id="locations">
+           <?php include_once('settings-additional-locations.php'); ?>
+      </div>
+      <div class="tab-pane" id="mailing">
+           <?php include_once('settings-mailing.php'); ?>
       </div>
       <div class="tab-pane" id="hours">
            <?php include_once('settings-hours.php'); ?>

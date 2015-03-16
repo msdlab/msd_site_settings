@@ -129,8 +129,13 @@ class MSDConnected extends WP_Widget {
             </select>
         <?php } ?>
         <?php $shows = array('address','additional_locations','phone','tollfree','fax','email','social'); ?>
+        <?php ?>
         <p>
-            <?php foreach($shows AS $s){ ?>
+            <?php foreach($shows AS $s){
+                if($s == 'additional_locations' && get_option('msdsocial_num_locations')==0){
+                    continue;
+                } 
+                ?>
             <input type="checkbox" name="<?php echo $this->get_field_name( $s ); ?>" id="<?php echo $this->get_field_id( $s ); ?>" <?php checked($instance[$s]); ?> value="1" /> <label for="<?php echo $this->get_field_id( $s ); ?>"><?php _e("Display ".str_replace('_',' ',$s)); ?></label><br/>
             <?php } ?>
         </p>
