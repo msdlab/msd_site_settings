@@ -30,6 +30,14 @@ class MSDConnected extends WP_Widget {
                 print '<div class="connected-address">'.$address.'</div>';
             }
         }
+        
+        
+        if ( $additional_locations ){
+            $additional_locations = do_shortcode('[msd-additional-locations]'); 
+            if ( $additional_locations ){
+                print '<div class="connected-additional-locations">'.$additional_locations.'</div>';
+            }
+        }
         if ( $phone ){
             $phone = '';
             if((get_option('msdsocial_tracking_phone')!='')){
@@ -90,7 +98,7 @@ class MSDConnected extends WP_Widget {
 			$instance['text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['text']) ) ); // wp_filter_post_kses() expects slashed
 		
         $instance['form_id'] = $new_instance['form_id'];
-        $shows = array('address','phone','tollfree','fax','email','social');
+        $shows = array('address','additional_locations','phone','tollfree','fax','email','social');
         foreach($shows AS $s){
         $instance[$s] = $new_instance[$s];
         }
@@ -120,10 +128,10 @@ class MSDConnected extends WP_Widget {
                 ?>
             </select>
         <?php } ?>
-        <?php $shows = array('address','phone','tollfree','fax','email','social'); ?>
+        <?php $shows = array('address','additional_locations','phone','tollfree','fax','email','social'); ?>
         <p>
             <?php foreach($shows AS $s){ ?>
-            <input type="checkbox" name="<?php echo $this->get_field_name( $s ); ?>" id="<?php echo $this->get_field_id( $s ); ?>" <?php checked($instance[$s]); ?> value="1" /> <label for="<?php echo $this->get_field_id( $s ); ?>"><?php _e("Display ".$s); ?></label><br/>
+            <input type="checkbox" name="<?php echo $this->get_field_name( $s ); ?>" id="<?php echo $this->get_field_id( $s ); ?>" <?php checked($instance[$s]); ?> value="1" /> <label for="<?php echo $this->get_field_id( $s ); ?>"><?php _e("Display ".str_replace('_',' ',$s)); ?></label><br/>
             <?php } ?>
         </p>
 

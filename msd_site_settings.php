@@ -42,7 +42,8 @@ class MSDSocial{
         add_action('admin_enqueue_scripts', array(&$this,'add_admin_scripts') );
         add_action('admin_enqueue_scripts', array(&$this,'add_admin_styles') );
         
-		add_shortcode('msd-address',array(&$this,'get_address'));
+        add_shortcode('msd-address',array(&$this,'get_address'));
+        add_shortcode('msd-additional-locations',array(&$this,'get_additional_locations'));
 		add_shortcode('msd-bizname',array(&$this,'get_bizname'));
 		add_shortcode('msd-copyright',array(&$this,'get_copyright'));
 		add_shortcode('msd-digits',array(&$this,'get_digits'));
@@ -88,6 +89,23 @@ function get_address(){
 		} else {
 			return false;
 		} 
+}
+function get_additional_locations(){
+    $additional_locations = get_option(msdsocial_adtl_locations);
+    $ret = '';
+    foreach($additional_locations AS $loc){
+        if(($loc[street]!='') || ($loc[city]!='') || ($loc[state]!='') || ($loc[zip]!='')) {
+            $ret .= '<address itemscope itemtype="http://schema.org/LocalBusiness">';
+                $ret .= ($loc[location_name]!='')?'<span itemprop="name" class="msdsocial_location_name">'.$loc[location_name].'</span> ':'';
+                $ret .= ($loc[street]!='')?'<span itemprop="streetAddress" class="msdsocial_street">'.$loc[street].'</span> ':'';
+                $ret .= ($loc[street2]!='')?'<span itemprop="streetAddress" class="msdsocial_street_2">'.$loc[street2].'</span> ':'';
+                $ret .= ($loc[city]!='')?'<span itemprop="addressLocality" class="msdsocial_city">'.$loc[city].'</span>, ':'';
+                $ret .= ($loc[state]!='')?'<span itemprop="addressRegion" class="msdsocial_state">'.$loc[state].'</span> ':'';
+                $ret .= ($loc[zip]!='')?'<span itemprop="postalCode" class="msdsocial_zip">'.$loc[zip].'</span> ':'';
+            $ret .= '</address>';
+        }
+    }
+    return $ret;
 }
 
 function get_digits($dowrap = TRUE,$sep = " | "){
