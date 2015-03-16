@@ -31,7 +31,9 @@ class MSDSocial{
 		/*
 		 * Pull in some stuff from other files
 		 */
-		$this->requireDir($this->the_path . 'lib/inc');
+		//$this->requireDir($this->the_path . 'lib/inc');
+        require_once($this->the_path . 'lib/inc/settings.php');
+        require_once($this->the_path . 'lib/inc/widgets.php');
         if(!is_admin()){
     		wp_enqueue_style('msd-social-style',$this->the_url.'lib/css/style.css');
     		wp_enqueue_style('msd-social-style-'.$this->icon_size,$this->the_url.'lib/css/style'.$this->icon_size.'.css');
