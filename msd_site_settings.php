@@ -102,6 +102,7 @@ function get_additional_locations(){
                 $ret .= ($loc[city]!='')?'<span itemprop="addressLocality" class="msdsocial_city">'.$loc[city].'</span>, ':'';
                 $ret .= ($loc[state]!='')?'<span itemprop="addressRegion" class="msdsocial_state">'.$loc[state].'</span> ':'';
                 $ret .= ($loc[zip]!='')?'<span itemprop="postalCode" class="msdsocial_zip">'.$loc[zip].'</span> ':'';
+                $ret .= $this->get_location_digits($loc);
             $ret .= '</address>';
         }
     }
@@ -150,6 +151,50 @@ function get_digits($dowrap = TRUE,$sep = " | "){
 		} else {
 			return false;
 		} 
+}
+
+function get_location_digits($loc,$dowrap = TRUE,$sep = " | "){
+        $sepsize = count($sep);
+        if(($loc[phone]!='') || ($loc[tollfree]!='') || ($loc[fax]!='')) {
+            if(($loc[tracking_phone]!='')){
+                if(wp_is_mobile()){
+                  $phone .= 'Phone: <a href="tel:+1'.$loc[tracking_phone].'">'.$loc[tracking_phone].'</a> ';
+                } else {
+                  $phone .= 'Phone: <span>'.$loc[tracking_phone].'</span> ';
+                }
+              $phone .= '<span itemprop="telephone" style="display: none;">'.$loc[phone].'</span> ';
+            } else {
+                if(wp_is_mobile()){
+                  $phone .= ($loc[phone]!='')?'Phone: <a href="tel:+1'.$loc[phone].'" itemprop="telephone">'.$loc[phone].'</a> ':'';
+                } else {
+                  $phone .= ($loc[phone]!='')?'Phone: <span itemprop="telephone">'.$loc[phone].'</span> ':'';
+                }
+            }
+            if(($loc[tracking_tollfree]!='')){
+                if(wp_is_mobile()){
+                  $tollfree .= 'Phone: <a href="tel:+1'.$loc[tracking_tollfree].'">'.$loc[tracking_tollfree].'</a> ';
+                } else {
+                  $tollfree .= 'Phone: <span>'.$loc[tracking_tollfree].'</span> ';
+                }
+              $tollfree .= '<span itemprop="telephone" style="display: none;">'.$loc[tollfree].'</span> ';
+            } else {
+                if(wp_is_mobile()){
+                  $tollfree .= ($loc[tollfree]!='')?'Phone: <a href="tel:+1'.$loc[tollfree].'" itemprop="telephone">'.$loc[tollfree].'</a> ':'';
+                } else {
+                  $tollfree .= ($loc[tollfree]!='')?'Phone: <span itemprop="telephone">'.$loc[tollfree].'</span> ':'';
+                }
+            }
+            $fax = ($loc[fax]!='')?'Fax: <span itemprop="faxNumber">'.$loc[fax].'</span> ':'';
+            $ret = $phone;
+            $ret .= ($phone!='' && $tollfree!='')?$sep:'';
+            $ret .= $tollfree;
+            $ret .= (!strpos($ret,$sep,$sepsize))?$sep:'';
+            $ret .= $fax;
+          if($dowrap){$ret = '<address itemscope itemtype="http://schema.org/LocalBusiness">'.$ret.'</address>';}
+        return $ret;
+        } else {
+            return false;
+        } 
 }
 
 function get_phone($dowrap = TRUE){
