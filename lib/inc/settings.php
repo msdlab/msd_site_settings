@@ -69,7 +69,10 @@ function msdsocial_theme_page ()
 		}			
 		 
 	}
-	add_submenu_page('options-general.php',__('Settings'), __('MSD Site Settings'), 'administrator', 'msdsocial-options', 'msdsocial_settings');
+	add_submenu_page('options-general.php',__('Settings'), __('MSD Site Settings'), 'admin_msd_settings', 'msdsocial-options', 'msdsocial_settings');
+    //give admin access to the settings
+    $role = get_role('administrator');
+    $role->add_cap('admin_msd_settings');
 }
 function msdsocial_settings()
 {
