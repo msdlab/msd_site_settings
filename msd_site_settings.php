@@ -2,7 +2,7 @@
 /*
 Plugin Name: MSD Site Settings
 Description: Provides settings panel for several social/address options and widgets/shortcodes/functions for display.
-Version: 1.2.0
+Version: 1.3.0
 Author: MSDLab
 Author URI: http://msdlab.com/
 GitHub Plugin URI: https://github.com/msdlab/msd_site_settings
@@ -16,6 +16,7 @@ if(!class_exists('GitHubPluginUpdater')){
 
 if ( is_admin() ) {
     new GitHubPluginUpdater( __FILE__, 'msdlab', "msd_site_settings" );
+
 }
 
 
@@ -29,7 +30,7 @@ class MSDSocial{
         $this->the_path = plugin_dir_path(__FILE__);
         $this->the_url = plugin_dir_url(__FILE__);
         $this->icon_size = get_option('msdsocial_icon_size')?get_option('msdsocial_icon_size'):'0';
-        $this->ver = '1.2.0';
+        $this->ver = '1.3.0';
         /*
          * Pull in some stuff from other files
          */
@@ -72,10 +73,12 @@ class MSDSocial{
             if($current_screen->id == 'settings_page_msdsocial-options'){
                 wp_register_style('bootstrap-style','//maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css');
                 wp_register_style('font-awesome-style','//maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css',array('bootstrap-style'));
-                wp_register_style('timepicker-style',$this->the_url.'lib/css/jquery.timepicker.css');
+	            wp_register_style('timepicker-style',$this->the_url.'lib/css/jquery.timepicker.css');
+	            wp_register_style('msdlabsitesettingadmin-style',$this->the_url.'lib/css/admin.css');
                 wp_enqueue_style('font-awesome-style');
-                wp_enqueue_style('timepicker-style');
-                wp_enqueue_style('jqueryui-smoothness','//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css');
+	            wp_enqueue_style('timepicker-style');
+	            wp_enqueue_style('msdlabsitesettingadmin-style');
+                wp_enqueue_style('jqueryui-smoothness','//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css');
             }
         }  
 
@@ -485,9 +488,21 @@ function notification_bar_in_date_window($date = '',$convert = TRUE){
     }
 }
 function setup_notification_bar(){
-    if(get_option('msdsocial_notification_content') == ''){
-        return false;
-    }
+	$languages = apply_filters( 'wpml_active_languages', NULL, 'orderby=id&order=desc' );
+	if ( !empty( $languages ) ) {
+		foreach( $languages as $l ) {
+			if($l['active']==1) {
+				if ( get_option( 'msdsocial_notification_content_' . $l['language_code'] ) == '' ) {
+					return false;
+				}
+			}
+		}
+	} else {
+		if(get_option('msdsocial_notification_content') == ''){
+			return false;
+		}
+	}
+
     
     $position = get_option('msdsocial_notification_position');
     if($position<10){
@@ -505,7 +520,7 @@ function setup_notification_bar(){
                 break;
             case 20:
                 if($genesis){
-                    add_action('genesis_after_header',array(&$this,'print_notification_bar'),99);
+                    add_action('genesis_after_header',array(&$this,'print_notification_bar'),9);
                 } else {
                     add_action('loop_start',array(&$this,'print_notification_bar'),1);
                 }
@@ -540,8 +555,17 @@ function print_notification_bar(){
     print $this->get_notification_bar();
 }
 function get_notification_bar(){
-    $content = apply_filters('the_content',stripcslashes(get_option('msdsocial_notification_content')));
-    return '<div class="notification-bar"><div class="wrap">' . $content . '</div></div>';
+	$languages = apply_filters( 'wpml_active_languages', NULL, 'orderby=id&order=desc' );
+	if ( !empty( $languages ) ) {
+		foreach( $languages as $l ) {
+			if($l['active']==1){
+				$content = apply_filters('the_content',stripcslashes(get_option('msdsocial_notification_content_'.$l['language_code'])));
+			}
+		}
+	} else {
+		$content = apply_filters('the_content',stripcslashes(get_option('msdsocial_notification_content')));
+    }
+    return apply_filters('msdsocial_notification_bar','<div class="notification-bar"><div class="wrap container">' . $content . '</div></div>');
 }
 
 function requireDir($dir){

@@ -8,6 +8,7 @@ function msdsocial_theme_page ()
 {
 	if ( count($_POST) > 0 && isset($_POST['msdsocial_settings']) )
 	{
+		$languages = apply_filters( 'wpml_active_languages', NULL, 'orderby=id&order=desc' );
 		$options = array (
 		'biz_name',
 		'street',
@@ -62,14 +63,20 @@ function msdsocial_theme_page ()
         'hours_friday_close',
         'hours_saturday_open',
         'hours_saturday_close',
-        'notification_content',
         'notification_position',
         'notification_start_datetime',
         'notification_end_datetime'
         );
+
+		if ( !empty( $languages ) ) {
+			foreach( $languages as $l ) {
+				$options[] = 'notification_content_'.$l['language_code'];
+			}
+		} else {
+			$options[] = 'notification_content';
+		}
         
         $options = apply_filters('msdlab_social_options',$options);
-		
 		foreach ( $options as $opt )
 		{
 			delete_option ( 'msdsocial_'.$opt, $_POST[$opt] );

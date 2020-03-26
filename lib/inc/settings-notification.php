@@ -1,11 +1,23 @@
 <?php
+    $languages = apply_filters( 'wpml_active_languages', NULL, 'orderby=id&order=desc' );
     $notification_inputs = array();
-    $notification_inputs['content'] = '<li>
-                  <label for="notification_content">Content</label>
+    if ( !empty( $languages ) ) {
+        foreach( $languages as $l ) {
+            $notification_inputs['content-'.$l['language_code']] = '<li>
+                  <label for="notification_content">'.$l['translated_name'].' Content</label>
                   <div class="input">
-                    <textarea name="notification_content" id="notification_content" class="regular-text" rows="5">' . stripcslashes(get_option('msdsocial_notification_content')) . '</textarea>
+                    <textarea name="notification_content_'.$l['language_code'].'" id="notification_content_'.$l['language_code'].'" class="regular-text" rows="5">' . stripcslashes( get_option( 'msdsocial_notification_content_'.$l['language_code'] ) ) . '</textarea>
                   </div>
               </li>';
+        }
+    } else {
+	    $notification_inputs['content'] = '<li>
+                  <label for="notification_content">Content</label>
+                  <div class="input">
+                    <textarea name="notification_content" id="notification_content" class="regular-text" rows="5">' . stripcslashes( get_option( 'msdsocial_notification_content' ) ) . '</textarea>
+                  </div>
+              </li>';
+    }
     $position_check = array(
         0 => '',
         10 => '',
